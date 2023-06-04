@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPAuthorizationCredentials
 from starlette.responses import Response
 
-from src.common.admin.dependencies.current_user import auth_scheme, get_current_user_from_refresh_token
-from src.data.database.models.user import User
+from src.api.dependencies.current_user_from_refresh_token import CurrentUserFromRefreshToken
+from src.common.dependencies.current_user import auth_scheme
 from src.domain.jwt_token.dto.output import JwtTokensOutSchema
 from src.domain.jwt_token.enums import JwtTokenType
 from src.domain.jwt_token.use_cases.add_jwt_tokens_to_blacklist import AddJwtTokensToBlacklist
@@ -31,7 +31,7 @@ async def access_token_route(
 @router.post("/refresh-token", status_code=200, response_model=JwtTokensOutSchema)
 @inject
 async def refresh_token_route(
-    current_user: User = Depends(get_current_user_from_refresh_token),
+    current_user: CurrentUserFromRefreshToken,
     create_jwt_tokens: CreateJwtTokens = Depends(Provide["use_cases.create_jwt_tokens"]),
     add_jwt_tokens_to_blacklist: AddJwtTokensToBlacklist = Depends(
         Provide["use_cases.add_jwt_tokens_to_blacklist"]

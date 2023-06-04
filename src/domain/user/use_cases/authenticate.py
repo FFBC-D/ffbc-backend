@@ -1,5 +1,5 @@
-from fastapi import HTTPException
-
+from src.common.exceptions.error_codes import ErrorCode
+from src.common.exceptions.use_case_exceptions import UseCaseHTTPException
 from src.data.database.models.user import User
 from src.data.uow import UnitOfWork
 from src.domain.user.dto.filter import UserFilterSchema
@@ -15,5 +15,5 @@ class Authenticate:
         async with self.uow:
             user_db = await self.uow.user.first(params=UserFilterSchema(email=data.email))
             if not user_db or not verify_password(data.password, user_db.hashed_password):
-                raise HTTPException(status_code=400, detail="User not found")
+                raise UseCaseHTTPException(message="User not found", error_code=ErrorCode.NOT_FOUND)
             return user_db

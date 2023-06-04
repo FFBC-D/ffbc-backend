@@ -15,7 +15,7 @@ class Container(containers.DeclarativeContainer):
         packages=[
             "src.api.admin_endpoints",
             "src.api.endpoints",
-            "src.common.admin.dependencies",
+            "src.common.dependencies",
         ]
     )
     gateways = providers.Container(Gateways, config=config)

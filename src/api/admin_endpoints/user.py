@@ -9,7 +9,7 @@ from starlette.responses import Response
 from src.common.admin.api.base_router import BaseAdminRouter
 from src.common.admin.api.decorators import action
 from src.common.admin.api.types import AdminQueries, HTTPMethod
-from src.common.admin.dependencies.current_user import AdminUser
+from src.common.dependencies.current_admin_user import CurrentAdminUser
 from src.data.database.models.user import User
 from src.domain.user.admin_use_cases.change_password import ChangePasswordAdmin
 from src.domain.user.admin_use_cases.create_user import CreateUserAdmin
@@ -58,7 +58,7 @@ class UserAdminRouter(
     @inject
     async def change_password(
         self,
-        _: AdminUser,
+        _: CurrentAdminUser,
         object_id: int,
         new_object: UserAdminUpdatePasswordSchema,
         change_password: ChangePasswordAdmin = Depends(Provide["use_cases.change_password_admin"]),

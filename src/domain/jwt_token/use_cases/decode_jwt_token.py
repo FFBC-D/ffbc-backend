@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
-from fastapi import HTTPException
 from jose import jwt
 from pydantic import ValidationError
 
+from src.common.exceptions.error_codes import ErrorCode
+from src.common.exceptions.use_case_exceptions import UseCaseHTTPException
 from src.data.uow import UnitOfWork
 from src.domain.jwt_token.dto.filter import OutstandingTokenFilterSchema, BlacklistTokenFilterSchema
 from src.domain.jwt_token.dto.output import JwtTokenSchema
@@ -22,9 +23,9 @@ class DecodeJwtToken:
             )
             decoded_token = JwtTokenSchema(**payload)
         except (jwt.JWTError, ValidationError):
-            raise HTTPException(
-                status_code=403,
-                detail="Could not validate credentials",
+            raise UseCaseHTTPException(
+                error_code=ErrorCode.AUTH_ERROR,
+                message="Could not validate credentials",
             )
 
         token_in_blacklist = False
@@ -39,9 +40,9 @@ class DecodeJwtToken:
                 token_in_blacklist = True
 
             if decoded_token.token_type != token_type:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Token has incorrect type",
+                raise UseCaseHTTPException(
+                    error_code=ErrorCode.AUTH_ERROR,
+                    message="Token has incorrect type",
                 )
 
         return decoded_token, token_in_blacklist

@@ -8,7 +8,6 @@ from pydantic import ValidationError
 from starlette.responses import Response
 
 from src.common.admin.api.types import APIMethod, AdminQueries, QueriesType, AnnotationKey
-from src.common.admin.dependencies.current_user import get_admin_user, AdminUser
 from src.common.admin.interfaces import (
     IAdminListUseCase,
     IAdminCreateUseCase,
@@ -23,6 +22,7 @@ from src.common.admin.use_cases.list import AdminListUseCase
 from src.common.admin.use_cases.retrieve import AdminRetrieveUseCase
 from src.common.admin.use_cases.update import AdminUpdateUseCase
 from src.common.admin.use_cases.update_files import AdminUpdateFilesUseCase
+from src.common.dependencies.current_admin_user import get_current_admin_user, CurrentAdminUser
 from src.common.dto import OrmModel, BaseOutSchema
 from src.common.repository import ModelEntity
 from src.common.types.python_types import IdType, AdminFilterSchema, SchemaInType
@@ -80,7 +80,9 @@ class BaseAdminRouter(
 
     def add_list_endpoint(self) -> None:
         @inject
-        async def list_view(_: AdminUser, queries: QueriesType = Depends()) -> list[ModelEntity]:
+        async def list_view(
+            _: CurrentAdminUser, queries: QueriesType = Depends()
+        ) -> list[ModelEntity]:
             use_case = await self._list_use_case_factory()
             try:
                 schema = self.filter_schema.from_orm(queries)
@@ -104,7 +106,7 @@ class BaseAdminRouter(
         )
 
     def add_create_endpoint(self) -> None:
-        async def create_view(new_object: SchemaInType, _: AdminUser) -> ModelEntity:
+        async def create_view(new_object: SchemaInType, _: CurrentAdminUser) -> ModelEntity:
             use_case = await self._create_use_case_factory()
             return await use_case(new_object=new_object)
 
@@ -120,9 +122,7 @@ class BaseAdminRouter(
         )
 
     def add_retrieve_endpoint(self) -> None:
-        async def retrieve_view(
-            object_id: IdType, _: User = Depends(get_admin_user)
-        ) -> ModelEntity:
+        async def retrieve_view(object_id: IdType, _: CurrentAdminUser) -> ModelEntity:
             use_case = await self._retrieve_use_case_factory()
             return await use_case(object_id)
 
@@ -137,7 +137,7 @@ class BaseAdminRouter(
 
     def add_update_endpoint(self) -> None:
         async def update_view(
-            object_id: IdType, updated_object: SchemaInType, _: AdminUser
+            object_id: IdType, updated_object: SchemaInType, _: CurrentAdminUser
         ) -> ModelEntity:
             use_case = await self._update_use_case_factory()
             return await use_case(object_id, updated_object)
@@ -154,7 +154,7 @@ class BaseAdminRouter(
         )
 
     def add_delete_endpoint(self) -> None:
-        async def delete_view(object_id: IdType, _: AdminUser) -> Response:
+        async def delete_view(object_id: IdType, _: CurrentAdminUser) -> Response:
             use_case = await self._delete_use_case_factory()
             await use_case(object_id)
             return Response(status_code=status.HTTP_204_NO_CONTENT)  # type: ignore
@@ -171,7 +171,7 @@ class BaseAdminRouter(
 
     def add_update_file_links_endpoint(self) -> None:
         async def update_file_links_view(
-            object_id: IdType, data: SchemaInType, _: AdminUser
+            object_id: IdType, data: SchemaInType, _: CurrentAdminUser
         ) -> ModelEntity:
             use_case = await self._update_file_links_use_case_factory()
             return await use_case(object_id, data)
