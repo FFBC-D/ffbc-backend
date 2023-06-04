@@ -1,0 +1,7 @@
+db/
+.env
+.idea/
+.coverage
+__pycache__/
+*.pyc
+.cache
