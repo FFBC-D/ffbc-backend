@@ -1,4 +1,5 @@
 import abc
+from dataclasses import dataclass
 from typing import Generic, Type
 
 from src.common.repository import ModelEntity
@@ -12,29 +13,24 @@ from src.common.types.python_types import (
 from src.common.uow import BaseUnitOfWork
 
 
+@dataclass
 class IAdminCreateUseCase(Generic[SchemaInType, ModelEntity], abc.ABC):
-    def __init__(
-        self,
-        uow: BaseUnitOfWork,
-        repository_attr_name: str,
-        entity_class: Type[ModelEntity],
-    ) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
-        self.entity_class = entity_class
+    uow: BaseUnitOfWork
+    repository_attr_name: str
+    entity_class: Type[ModelEntity]
 
     @abc.abstractmethod
     async def __call__(self, new_object: SchemaInType) -> ModelEntity:
         ...
 
 
+@dataclass
 class IAdminListUseCase(
     Generic[AdminFilterSchema, ModelEntity, SpecsSchema, FacetsSchema],
     abc.ABC,
 ):
-    def __init__(self, uow: BaseUnitOfWork, repository_attr_name: str) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
+    uow: BaseUnitOfWork
+    repository_attr_name: str
 
     @abc.abstractmethod
     async def __call__(self, filter_schema: AdminFilterSchema) -> list[ModelEntity]:
@@ -53,64 +49,44 @@ class IAdminListUseCase(
         ...
 
 
+@dataclass
 class IAdminRetrieveUseCase(Generic[IdType, ModelEntity], abc.ABC):
-    def __init__(
-        self,
-        uow: BaseUnitOfWork,
-        repository_attr_name: str,
-        filter_schema_class: Type[AdminFilterSchema],
-    ) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
-        self.filter_schema_class = filter_schema_class
+    uow: BaseUnitOfWork
+    repository_attr_name: str
+    filter_schema_class: Type[AdminFilterSchema]
 
     @abc.abstractmethod
     async def __call__(self, object_id: IdType) -> ModelEntity:
         ...
 
 
+@dataclass
 class IAdminUpdateUseCase(Generic[IdType, SchemaInType, ModelEntity], abc.ABC):
-    def __init__(
-        self,
-        uow: BaseUnitOfWork,
-        repository_attr_name: str,
-        filter_schema_class: Type[AdminFilterSchema],
-    ) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
-        self.filter_schema_class = filter_schema_class
+    uow: BaseUnitOfWork
+    repository_attr_name: str
+    filter_schema_class: Type[AdminFilterSchema]
 
     @abc.abstractmethod
     async def __call__(self, object_id: IdType, updated_object: SchemaInType) -> ModelEntity:
         ...
 
 
+@dataclass
 class IAdminDeleteUseCase(Generic[IdType], abc.ABC):
-    def __init__(
-        self,
-        uow: BaseUnitOfWork,
-        repository_attr_name: str,
-        filter_schema_class: Type[AdminFilterSchema],
-    ) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
-        self.filter_schema_class = filter_schema_class
+    uow: BaseUnitOfWork
+    repository_attr_name: str
+    filter_schema_class: Type[AdminFilterSchema]
 
     @abc.abstractmethod
     async def __call__(self, object_id: IdType) -> None:
         ...
 
 
+@dataclass
 class IAdminUpdateFilesUseCase(Generic[IdType, SchemaInType, ModelEntity], abc.ABC):
-    def __init__(
-        self,
-        uow: BaseUnitOfWork,
-        repository_attr_name: str,
-        filter_schema_class: Type[AdminFilterSchema],
-    ) -> None:
-        self.uow = uow
-        self.repository_attr_name = repository_attr_name
-        self.filter_schema_class = filter_schema_class
+    uow: BaseUnitOfWork
+    repository_attr_name: str
+    filter_schema_class: Type[AdminFilterSchema]
 
     @abc.abstractmethod
     async def __call__(self, object_id: IdType, data: SchemaInType) -> ModelEntity:

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from uuid import uuid4
 
@@ -9,10 +10,10 @@ from src.domain.jwt_token.dto.output import JwtTokensOutSchema, JwtTokenSchema
 from src.domain.jwt_token.enums import JwtTokenType
 
 
+@dataclass
 class CreateJwtTokens:
-    def __init__(self, uow: UnitOfWork, config: dict):
-        self.uow = uow
-        self.config = config
+    uow: UnitOfWork
+    config: dict
 
     def _encode_payload(self, token_data: JwtTokenSchema) -> str:
         encoded_jwt = jwt.encode(
