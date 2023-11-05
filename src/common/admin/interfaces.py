@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from typing import Generic, Type
+from typing import Generic, Type, ClassVar
 
 from src.common.repository import ModelEntity
 from src.common.types.python_types import (
@@ -90,4 +90,16 @@ class IAdminUpdateFilesUseCase(Generic[IdType, SchemaInType, ModelEntity], abc.A
 
     @abc.abstractmethod
     async def __call__(self, object_id: IdType, data: SchemaInType) -> ModelEntity:
+        ...
+
+
+@dataclass
+class IAdminLinkM2mObjectUseCase(abc.ABC):
+    uow: BaseUnitOfWork
+    main_model_repository_attr_name: ClassVar[str]
+    link_model_repository_attr_name: ClassVar[str]
+    link_model_field_name: ClassVar[str]
+
+    @abc.abstractmethod
+    async def __call__(self, main_model_id: int, link_model_id: int) -> None:
         ...

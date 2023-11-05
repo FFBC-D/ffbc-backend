@@ -13,3 +13,6 @@ SchemaInType = TypeVar("SchemaInType", bound=BaseInSchema)
 SpecsSchema = TypeVar("SpecsSchema", bound=BaseModel)
 FacetsSchema = TypeVar("FacetsSchema", bound=BaseModel)
 FilterSchema = TypeVar("FilterSchema", bound=BaseModel, contravariant=True)
+
+Obj1IdType = TypeVar("Obj1IdType", int, UUID, str)
+Obj2IdType = TypeVar("Obj2IdType", int, UUID, str)

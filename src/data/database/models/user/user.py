@@ -3,12 +3,10 @@ from datetime import datetime
 from sqlalchemy import DateTime, text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.common.database.mixins import BaseClass
-from src.data.database.models import mapper_registry
+from src.common.database.mixins import BaseClass, IdPrimaryKeyMixin, TimestampMixin
 
 
-@mapper_registry.mapped_as_dataclass(kw_only=True)
-class User(BaseClass):
+class User(IdPrimaryKeyMixin, TimestampMixin, BaseClass):
     __tablename__ = "users"
 
     first_name: Mapped[str] = mapped_column(nullable=False)

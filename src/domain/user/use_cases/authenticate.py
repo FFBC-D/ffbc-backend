@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from src.common.exceptions.error_codes import ErrorCode
 from src.common.exceptions.use_case_exceptions import UseCaseHTTPException
 from src.data.database.models.user import User
@@ -7,9 +9,9 @@ from src.domain.user.dto.input import AuthInSchema
 from src.utils.security import verify_password
 
 
+@dataclass
 class Authenticate:
-    def __init__(self, uow: UnitOfWork):
-        self.uow = uow
+    uow: UnitOfWork
 
     async def __call__(self, data: AuthInSchema) -> User:
         async with self.uow:

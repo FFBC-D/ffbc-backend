@@ -4,8 +4,9 @@ from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
+from src.common.database.mixins import BaseClass
 from src.config.settings import Settings
-from src.data.database.models import mapper_registry, start_mappers
+from src.data.database.models import start_mappers
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,7 +23,7 @@ if config.get_main_option("sqlalchemy.url", None) is None:
 # Автоматический импорт моделей
 
 start_mappers()
-target_metadata = mapper_registry.metadata
+target_metadata = BaseClass.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

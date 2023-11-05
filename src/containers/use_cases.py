@@ -3,6 +3,12 @@ from dependency_injector import containers, providers
 from src.domain.jwt_token.use_cases.add_jwt_tokens_to_blacklist import AddJwtTokensToBlacklist
 from src.domain.jwt_token.use_cases.create_jwt_tokens import CreateJwtTokens
 from src.domain.jwt_token.use_cases.decode_jwt_token import DecodeJwtToken
+from src.domain.products.product_category.admin_use_cases.link_measure_category import (
+    AdminLinkMeasureCategoryToProductCategory,
+)
+from src.domain.products.product_category.admin_use_cases.link_product_modification import (
+    AdminProductModificationToProductCategory,
+)
 from src.domain.user.admin_use_cases.change_password import ChangePasswordAdmin
 from src.domain.user.use_cases.authenticate import Authenticate
 from src.domain.user.use_cases.register import Register
@@ -22,3 +28,9 @@ class UseCases(containers.DeclarativeContainer):
 
     # Admin extra action use cases
     change_password_admin = providers.Factory(ChangePasswordAdmin, uow=repositories.uow)
+    link_measure_category_to_product_category = providers.Factory(
+        AdminLinkMeasureCategoryToProductCategory, uow=repositories.uow
+    )
+    link_product_modification_to_product_category = providers.Factory(
+        AdminProductModificationToProductCategory, uow=repositories.uow
+    )

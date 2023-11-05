@@ -22,6 +22,7 @@ class Register:
                 last_name=data.last_name,
                 hashed_password=get_password_hash(data.password),
             )
+
             self.uow.user.add(obj)
             try:
                 await self.uow.commit()

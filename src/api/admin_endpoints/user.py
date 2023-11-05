@@ -61,7 +61,9 @@ class UserAdminRouter(
         _: CurrentAdminUser,
         object_id: int,
         new_object: UserAdminUpdatePasswordSchema,
-        change_password: ChangePasswordAdmin = Depends(Provide["use_cases.change_password_admin"]),
+        change_password: ChangePasswordAdmin = Depends(
+            Provide["use_cases.change_password_admin"]
+        ),
     ) -> Response:
         await change_password(object_id, new_object)
         return Response(status_code=status.HTTP_200_OK)

@@ -23,7 +23,7 @@ greenlet = "^2.0.2"
 python-dotenv = "^1.0.0"
 psycopg2-binary = "^2.9.6"
 websockets = "^11.0.3"
-sqlalchemy = "^2.0.15"
+sqlalchemy = "2.0.22"
 choicesenum = "^0.7.0"
 
 
