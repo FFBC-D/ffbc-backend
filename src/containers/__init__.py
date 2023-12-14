@@ -13,8 +13,7 @@ class Container(containers.DeclarativeContainer):
     config: Settings = providers.Configuration(pydantic_settings=[Settings()])
     wiring_config = containers.WiringConfiguration(
         packages=[
-            "src.api.admin_endpoints",
-            "src.api.endpoints",
+            "src.api",
             "src.common.dependencies",
         ]
     )

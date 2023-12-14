@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from src.common.exceptions.handlers.fastapi_exception_handlers import (
     use_case_http_exception_handler,
@@ -16,6 +17,14 @@ def create_app() -> FastAPI:
     application.include_router(include_admin_endpoint_routers(), prefix="/api/admin")
 
     application.add_exception_handler(BaseHTTPException, use_case_http_exception_handler)
+
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     return application
 
