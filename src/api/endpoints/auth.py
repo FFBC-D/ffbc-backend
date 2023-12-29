@@ -1,10 +1,9 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
-from fastapi.security import HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.responses import Response
 
 from src.api.dependencies.current_user_from_refresh_token import CurrentUserFromRefreshToken
-from src.common.dependencies.current_user import auth_scheme
 from src.domain.jwt_token.dto.output import JwtTokensOutSchema
 from src.domain.jwt_token.enums import JwtTokenType
 from src.domain.jwt_token.use_cases.add_jwt_tokens_to_blacklist import AddJwtTokensToBlacklist
@@ -44,7 +43,7 @@ async def refresh_token_route(
 @router.post("/revoke-token", status_code=204)
 @inject
 async def revoke_token_route(
-    auth_credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    auth_credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
     decode_jwt_token: DecodeJwtToken = Depends(Provide["use_cases.decode_jwt_token"]),
     add_jwt_tokens_to_blacklist: AddJwtTokensToBlacklist = Depends(
         Provide["use_cases.add_jwt_tokens_to_blacklist"]

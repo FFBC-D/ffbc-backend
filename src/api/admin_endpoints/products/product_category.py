@@ -10,6 +10,7 @@ from src.common.admin.api.base_router import BaseAdminRouter
 from src.common.admin.api.decorators import action
 from src.common.admin.api.types import AdminQueries, HTTPMethod
 from src.common.admin.enums import ModelLinkAction
+from src.common.dependencies.current_admin_user import CurrentAdminUser
 from src.data.database.models.product import ProductCategory
 from src.domain.products.product_category.admin_use_cases.link_measure_category import (
     AdminLinkMeasureCategoryToProductCategory,
@@ -56,7 +57,7 @@ class ProductCategoryAdminRouter(
     @inject
     async def link_measure_category(
         self,
-        # _: CurrentAdminUser,
+        _: CurrentAdminUser,
         object_id: int,
         measure_category_id: int,
         _action: ModelLinkAction = Path(alias="action"),
@@ -84,7 +85,7 @@ class ProductCategoryAdminRouter(
     @inject
     async def link_product_modification(
         self,
-        # _: CurrentAdminUser,
+        _: CurrentAdminUser,
         object_id: int,
         modification_id: int,
         _action: ModelLinkAction = Path(alias="action"),

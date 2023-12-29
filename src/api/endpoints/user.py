@@ -10,4 +10,4 @@ router = APIRouter()
 
 @router.get("/me", status_code=200, response_model=UserOutSchema)
 async def current_user_route(user: CurrentAuthenticatedUser):
-    return UserOutSchema.parse_obj(asdict(user))
+    return user

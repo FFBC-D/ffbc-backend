@@ -13,20 +13,17 @@ from src.domain.user.dto.filter import UserFilterSchema
 from src.domain.user.use_cases.retrieve_user import RetrieveUser
 from src.utils.auth import get_token_from_bearer_string
 
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/login/access-token")
 
-auth_scheme = HTTPBearer()
 
 
 @inject
 async def get_current_user(
-    auth_credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    auth_credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
     decode_jwt_token: DecodeJwtToken = Depends(Provide["use_cases.decode_jwt_token"]),
     retrieve_user: RetrieveUser = Depends(Provide["use_cases.retrieve_user"]),
 ) -> User | None:
-    token = get_token_from_bearer_string(bearer_string=auth_credentials.credentials)
     decoded_token, token_in_blacklist = await decode_jwt_token(
-        token=token, token_type=JwtTokenType.ACCESS
+        token=auth_credentials.credentials, token_type=JwtTokenType.ACCESS
     )
     if token_in_blacklist:
         raise AppHTTPException(
